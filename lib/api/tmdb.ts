@@ -1,9 +1,9 @@
 import 'server-only';
-import { Title } from './type'
+import { Titles } from '../type'
 
 export const getTitle = async(
     movieId:string
-): Promise<Title> => {
+): Promise<Titles> => {
     const response = await fetch(
         `https://api.themoviedb.org/3/movie/${movieId}/alternative_titles?country=JP'`,
         {

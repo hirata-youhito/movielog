@@ -2,7 +2,7 @@
 import styles from "../../scss/search.module.scss"
 
 import { MdMovie } from "react-icons/md";
-import { Title,TitleSearchResponse } from '../../type';
+import { Titles,TitleSearchResponse } from '../../type';
 import {
   FunctionComponent,
   useState,

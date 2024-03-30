@@ -1,5 +1,5 @@
-//Alternative Titles_MOVIES.代替タイトル_映画
-export type Title = {
+//MOVIES_Alternative Titles.映画_代替タイトル
+export type Titles = {
     id:number;
     titles:[
         {
@@ -10,8 +10,8 @@ export type Title = {
     ];
 }
 
-//Credits_MOVIES.クレジット_映画
-export type Credit = {
+//MOVIES_Credits.映画_クレジット
+export type Credits = {
     id:number;
     cast:[
         {
@@ -47,7 +47,37 @@ export type Credit = {
 }
 
 //Images_MOVIES.画像_映画
+export type Images = {
+    backdrops:[
+        aspect_ratio:number,
+        height:number,
+        iso_639_1:string,
+        file_path:string,
+        vote_average:number,
+        vote_count:number,
+        width:number,
 
+    ],
+    id:number,
+    logos:[
+        aspect_ratio:number,
+        height:number,
+        iso_639_1:string,
+        file_path:string,
+        vote_average:number,
+        vote_count:number,
+        width:number
+    ],
+    posters:[
+        aspect_ratio:number,
+        height:number,
+        iso_639_1:string,
+        file_path:string,
+        vote_average:number,
+        vote_count:number,
+        width:number
+    ]
+}
 //Details_MOVIES.細部_映画
 
 //Movie_Search.映画_捜索
@@ -62,5 +92,5 @@ export type Credit = {
 export type TitleSearchResponse = {
     total:number;
     total_page:number;
-    results:Title[];
+    results:Titles[];
   }

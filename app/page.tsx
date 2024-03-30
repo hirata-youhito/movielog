@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Search } from '../lib/component/searchMovie/Search';
-import { getTitle } from '../lib/tmdb';
+import { getTitle } from '../lib/api/tmdb';
 import Link from 'next/link';
 
 
@@ -9,7 +9,7 @@ export default function Page() {
     <div>
       <Search></Search>
       <Link href = {`http://localhost:3000/searchMovie`}>
-        <p>検索URLへ</p>
+        <p>検索結果画面へ</p>
       </Link>
     </div>
   );
