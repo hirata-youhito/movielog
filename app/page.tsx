@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Search } from '../lib/component/searchMovie/Search';
-import { getTitle } from '../lib/api/tmdb';
+import { getTitle } from './api/route';
 import Link from 'next/link';
 
 

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useParams } from "next/navigation";
-import {getTitle} from '@/lib/api/tmdb';
+import {getTitle} from '@/app/api/route';
 import { useSearchParams } from "next/navigation";
 import { NextPage } from "next";
 

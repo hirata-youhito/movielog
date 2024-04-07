@@ -48,7 +48,7 @@ export type Credits = {
 
 //Images_MOVIES.画像_映画
 export type Images = {
-    backdrops:[
+    backdrops:[{
         aspect_ratio:number,
         height:number,
         iso_639_1:string,
@@ -57,9 +57,9 @@ export type Images = {
         vote_count:number,
         width:number,
 
-    ],
+    }],
     id:number,
-    logos:[
+    logos:[{
         aspect_ratio:number,
         height:number,
         iso_639_1:string,
@@ -67,8 +67,8 @@ export type Images = {
         vote_average:number,
         vote_count:number,
         width:number
-    ],
-    posters:[
+    }],
+    posters:[{
         aspect_ratio:number,
         height:number,
         iso_639_1:string,
@@ -76,7 +76,7 @@ export type Images = {
         vote_average:number,
         vote_count:number,
         width:number
-    ]
+    }]
 }
 //Details_MOVIES.細部_映画
 
