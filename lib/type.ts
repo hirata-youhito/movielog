@@ -93,6 +93,14 @@ export type Images = {
 
 //People_Trending.人_トレンド
 
+//GENRES_Movie List.ジャンル_映画一覧
+export type Genres = {
+    genres:[
+        id:number,
+        name:string,
+    ]
+}
+
 //テスト用
 export type TitleSearchResponse = {
     total:number;
