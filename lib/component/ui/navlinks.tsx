@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function NavLinks(){
     return(
-        <div>
+        <div className="">
             <BiSolidMoviePlay/>
             <Link
                 className= ""

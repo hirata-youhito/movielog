@@ -1,8 +1,9 @@
-import { prisma } from "../tool/Prisma"
-import { movieInfo } from "../searchMovie/movieList";
+//不使用
+import { Prisma } from "../tool/Prisma"
+import { movieInfo } from "../../type";
 
-export async function getTitle(searchQuery?:string){
-    const response:movieInfo[] = await prisma.movieList.findMany({
+export async function getMovieInfo(searchQuery?:string){
+    const response:movieInfo[] = await Prisma.movieList.findMany({
         where:{
             title:{
                 contains:searchQuery,
@@ -17,6 +18,6 @@ export async function getTitle(searchQuery?:string){
     
 
     // コネクト切断は要件等
-    prisma.$disconnect();
+    // prisma.$disconnect();
     return  response
 };

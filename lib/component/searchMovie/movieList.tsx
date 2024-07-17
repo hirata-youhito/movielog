@@ -1,102 +1,98 @@
 // 'use client'
 
-import React,{FC} from "react";
+import React,{useEffect} from "react";
 import Image from 'next/image';
-import {Images} from "../../type"
 import Link from 'next/link';
-import { getTitle } from "../db/title";
-import { useSearchParams, usePathname} from 'next/navigation';
-import {useState} from 'react';
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { getImageUrl } from "../api/getImageUrl";
+import { movieInfo } from "../../type";
+import { movieInfoArray } from "../api/getMovieInfoArray";
 
-export type movieInfo = {
-    id:number;
-    title:string;
+import { Suspense } from "react";
+import Loading from "@/app/(overview)/searchMovie/loading";
+
+type searchParams = {
+    searchQuery:string;
 }
 
-export default  async function MovieList()  {
+type Props = {
+    params:searchParams
+}
+
+// 取得データ件数によって以下の型になる場合がある
+// type dataTypeNest = {
+//     data:[
+//         {
+//             id:number,
+//             title:string,
+//         }
+//     ]
+// }
+
+const createArray = async (searchQuery:string | null) => {
+    const dataArray = await movieInfoArray(searchQuery);
+    if("data" in dataArray){
+        return dataArray.data
+    } else {
+        return dataArray
+    }
+}
+
+export default  async function MovieList({params}:Props)  {
     // const searchParams = useSearchParams();
-    // const pathname = usePathname();
-    // const [movieInfoArray,setMovieInfoArray] = useState<movieInfo[]>([]);
-
-    // type Info = {
-    //     title:string,
-    //     id:string,
-    //     key:string
-    // }
-
-    // const infoArray: Info[] = [
-    //     {title:"The creater",id:"670292",key:"A"},
-    //     {title:"Oppenhymer",id:"872585",key:"B"},
-    //     {title:"Aquaman",id:"572802",key:"C"},
-    //     {title:"Fly",id:"940551",key:"D"},
-    // ]
-
-    const response = await getTitle();
-
-    const putMovieInfoArray = (searchQuery:string) => {
-        const movieInfoList:movieInfo[] = [];
-        getTitle(searchQuery)
-            .then(response => {
-                response.map((info:movieInfo) => {
-                    movieInfoList.push(info);
-                })
-            })
-        return movieInfoList;
-    }
-
-    const movieInfoArray = putMovieInfoArray("t")
-
-    const getImage = async (movieId:number):Promise<string> => {
-        const imageHeaders = new Headers();
-        imageHeaders.append("Accept", "application/json");
-        imageHeaders.append("Authorization", ` Bearer ${process.env.Access_Token_Auth}`);
-
-        const response = await fetch(
-            `https://api.themoviedb.org/3/movie/${movieId}/images`,
-            {
-                method:'GET',
-                headers:imageHeaders
-            }
-        )
-        const image:Images = await response.json();
-        
-        return(
-            image.backdrops[0].file_path
-        )
-    }
+    // const searchQuery = searchParams.get('searchQuery')
+    // const [dataArray,setDataArray] = useState<movieInfo[]>([])
+    const searchQuery:string = params.searchQuery ?? ""
+    console.log("searchQuery:"+searchQuery)
     
-
+    
+    
+    // useEffect(() => {
+    //     createArray(searchQuery)
+    //     .then((newArray) => {
+    //         setDataArray(newArray)
+    //     })
+    // },[])
 
     return (
-        <div className="grid grid-cols-3 gap-4 content-normal">
-            {(await response).map(async (movieInfo) => {
-                //const imageUrl = `https://image.tmdb.org/t/p/w500${await getImage(info.id)}`
-                const url = await getImage(movieInfo.id)
-                
-                const imageUrl = `https://image.tmdb.org/t/p/w500${url}`
-                console.log(imageUrl)
-                return(
-                    <div key = {movieInfo.id} className="w-full h-full">
-                        <Link
-                            className=""
-                            href = {`http://localhost:3000/movieInfo?movieId=${movieInfo.id}`}
-                            key = {movieInfo.id}
-                        >
-                            <Image
-                                className="w-full h-44"
-                                src={imageUrl}
-                                key={movieInfo.id}
-                                alt="movieImage"
-                                //fill={true}
-                                width={1000}
-                                height={500}
-                            />
-                        </Link>
-                        <div className="text-center text-blue-600">{movieInfo.title}</div>
-                    </div>
-                )
-            })}
-        </div>
+        <Suspense fallback={<Loading />}>
+            <div className="grid grid-cols-3 gap-4 content-normal">
+                {(await createArray(searchQuery)).map(async (movieInfo:movieInfo) => {
+                    const url = await getImageUrl(movieInfo.id)
+                    // console.log("url:")
+                    // console.log(url)
+                    const imageUrl = `https://image.tmdb.org/t/p/w500${url}`
+                    console.log("imageUrl:"+imageUrl)
+                    return(
+                        <div key = {movieInfo.id} className="w-full h-full">
+                            <Link
+                                className=""
+                                href = {{
+                                    pathname:`http://localhost:3000/movieInfo`,
+                                    query: {
+                                        id:movieInfo.id,
+                                        title:movieInfo.title,
+                                        imageUrl:imageUrl
+                                    }
+                                }}
+                                key = {movieInfo.id}
+                            >
+                                <Image
+                                    className="w-full h-44"
+                                    src={imageUrl}
+                                    key={movieInfo.id}
+                                    alt="movieImage"
+                                    //fill={true}
+                                    width={1000}
+                                    height={500}
+                                />
+                            </Link>
+                            <div className="text-center text-blue-600">{movieInfo.title}</div>
+                        </div>
+                    )
+                })}
+            </div>
+        </Suspense>
     );
 };
-

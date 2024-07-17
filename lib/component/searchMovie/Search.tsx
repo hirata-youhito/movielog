@@ -1,63 +1,65 @@
 'use client';
 import styles from "../../scss/search.module.scss"
-
 import { MdMovie } from "react-icons/md";
-import { Titles,TitleSearchResponse } from '../../type';
 import {
-  FunctionComponent,
   useEffect,
   useState,
-  useTransition,
 } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import React,{FC} from "react";
-import { Url } from "next/dist/shared/lib/router/router";
-import { URLSearchParams } from "url";
-
-
+import React from "react";
 
 export const Search = () => {
-    const [movieId,setMovieId] = useState<string | null>(null);
+    const [searchQuery,setSearchQuery] = useState<string | null>(null);
     const searchParams = useSearchParams();
     const pathname = usePathname();
+    const params = new URLSearchParams(searchParams);
     const router = useRouter();
 
     //映画詳細ページ遷移先設定
-    const handleChangePage = () => {
-        if(!movieId){
-        return;
+
+    const handleEnterevent:React.KeyboardEventHandler<HTMLInputElement> = (event) => {
+        if (searchQuery) {
+        params.set('searchQuery', searchQuery);
+        } else {
+        params.delete('searchQuery');
         }
-        const url = new URL(`http://localhost:3000/movieInfo?searchQuery=${movieId}`);
-        return (
-            router.push(`${url}`)
-        );
-    };
+        const url = `${pathname}?${params.toString()}`
 
-    const handleKeyDown = (e:React.KeyboardEvent<HTMLInputElement>) => {
-
+        if(event.key === 'Enter'){
+            console.log("Enter押下")
+            router.replace(url)
+        }
     }
 
-    useEffect(() => {
-        // エンターキーもしくはボタンをクリックした時に検索欄の入力値をURLパラメータの値に設定し、その値をSQLクエリの条件値とする
-        // event.key === 'Enter'を利用してエンターキーを指定する
-    },[])
+    const handleButtonhevent:React.MouseEventHandler<HTMLButtonElement> = () => {
+        if (searchQuery) {
+            params.set('searchQuery', searchQuery);
+            } else {
+            params.delete('searchQuery');
+            }
+            const url = `${pathname}?${params.toString()}`
+            console.log("検索ボタン押下")
+            router.replace(url)
+    }
 
     return (
         <div className={styles.searchArea}>
             <input
+                id="input"
                 title="検索入力欄"
                 className={styles.input}
-                value={movieId ?? ''}
+                value={searchQuery ?? ''}
                 onChange={(e) => {
-                    setMovieId(e.target.value);
+                    setSearchQuery(e.target.value);
                 }}
-                // onKeyDown={handleChangePage}
+                onKeyDown={handleEnterevent}
             />
             <button
                 title="検索実行ボタン"
+                id="button"
                 className={styles.button}
-                onClick={handleChangePage}
-                disabled={!movieId}
+                onClick={handleButtonhevent}
+                disabled={!searchQuery}
             >
                 <MdMovie size={30} color={"black"} />
             </button>
